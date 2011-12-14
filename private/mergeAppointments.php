@@ -9,13 +9,15 @@
 // =========
 //
 //
-function ciniki_calendar_mergeAppointments($ciniki, $lists) {
+function ciniki_calendars_mergeAppointments($ciniki, $lists) {
 
 	$appointments = array();
 	$cur_idx = array();
 
+	//print_r($lists);
+
 	for($i=0;$i<count($lists);$i++) {
-		$cur_pos[$i] = 0;
+		$cur_idx[$i] = 0;
 	}
 
 	$last_timestamp = 0;
@@ -28,10 +30,10 @@ function ciniki_calendar_mergeAppointments($ciniki, $lists) {
 		$cur_pos = -1;
 		for($i=0;$i<count($lists);$i++) {
 			// Check for end of lists
-			if( $cur_idx[$i] > count($list) ) {
+			if( $cur_idx[$i] >= count($lists[$i]) ) {
 				continue;
 			}
-			$offset = ($list[$cur_idx[$i]]['appointment']['start_ts'] - $last_timestamp);
+			$offset = ($lists[$i][$cur_idx[$i]]['appointment']['start_ts'] - $last_timestamp);
 			if( $offset < $cur_offset ) {
 				$cur_offset = $offset;
 				$cur_pos = $i;
@@ -44,7 +46,7 @@ function ciniki_calendar_mergeAppointments($ciniki, $lists) {
 		}
 
 		// Push appointment into new array
-		array_push($appointments, $lists[$cur_pos]['appointments'][$cur_idx[$cur_pos]]);
+		array_push($appointments, $lists[$cur_pos][$cur_idx[$cur_pos]]);
 		$cur_idx[$cur_pos]++;
 	}
 
