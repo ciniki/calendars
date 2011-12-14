@@ -55,7 +55,7 @@ function ciniki_calendars_checkAccess($ciniki, $business_id, $method) {
 	require_once($ciniki['config']['core']['modules_dir'] . '/core/private/dbHashQuery.php');
 	$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'businesses', 'user');
 	if( $rc['stat'] != 'ok' ) {
-		return $rc;
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'496', 'msg'=>'Access denied.'));
 	}
 	//
 	// Double check business_id and user_id match, for single row returned.
@@ -64,7 +64,7 @@ function ciniki_calendars_checkAccess($ciniki, $business_id, $method) {
 		&& $rc['user']['business_id'] == $business_id 
 		&& $rc['user']['user_id'] = $ciniki['session']['user']['id'] ) {
 		// Access Granted!
-		return array('stat'=>'ok');
+		return array('stat'=>'ok', 'modules'=>$modules);
 	}
 
 	//
