@@ -70,6 +70,6 @@ function ciniki_calendars_checkAccess($ciniki, $business_id, $method) {
 	//
 	// By default, fail
 	//
-	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'496', 'msg'=>'Access denied.'));
+	return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'510', 'msg'=>'Access denied.'));
 }
 ?>
