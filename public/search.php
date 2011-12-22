@@ -20,6 +20,7 @@ function ciniki_calendars_search($ciniki) {
 		'start_needle'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No search specified'), 
 		'limit'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No limit specified'), 
 		'date'=>array('required'=>'no', 'type'=>'date', 'blank'=>'yes', 'errmsg'=>'No date specified'),
+		'full'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No limits specified'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
