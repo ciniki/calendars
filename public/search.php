@@ -19,6 +19,7 @@ function ciniki_calendars_search($ciniki) {
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
 		'start_needle'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No search specified'), 
 		'limit'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No limit specified'), 
+		'date'=>array('required'=>'no', 'type'=>'date', 'blank'=>'yes', 'errmsg'=>'No date specified'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
