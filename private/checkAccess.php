@@ -32,7 +32,7 @@ function ciniki_calendars_checkAccess($ciniki, $business_id, $method) {
         return $rc;
     }   
     if( !isset($rc['modules']) || !isset($rc['modules']['ciniki.calendars']) ) { 
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'495', 'msg'=>'Access denied.'));
+        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'519', 'msg'=>'Access denied.'));
     }   
     $modules = $rc['modules'];
 
