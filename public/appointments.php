@@ -52,20 +52,19 @@ function ciniki_calendars_appointments($ciniki) {
 		}
 	}
 
-//	if( isset($modules['ciniki.tasks']) ) {
+	if( isset($modules['ciniki.tasks']) ) {
 		//
 		// Grab the wine production appointments
 		//
-//		ciniki_core_loadMethod($ciniki, 'ciniki', 'tasks', 'private', 'appointments');
-//		$rc = ciniki_tasks__appointments($ciniki, $business_id, $args);
-//		if( $rc['stat'] != 'ok' ) {
-//			return $rc;
-//		}
-//		if( isset($rc['appointments']) ) {
-//			array_push($lists, $rc['appointments']);
-//		}
-//	}
-
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'tasks', 'private', 'appointments');
+		$rc = ciniki_tasks__appointments($ciniki, $args['business_id'], $args);
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+		if( isset($rc['appointments']) ) {
+			array_push($lists, $rc['appointments']);
+		}
+	}
 	
 	if( isset($modules['ciniki.wineproduction']) ) {
 		//
