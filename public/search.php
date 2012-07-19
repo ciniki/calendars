@@ -31,7 +31,7 @@ function ciniki_calendars_search($ciniki) {
 	// Check access to the calendar, and which modules are turned on for the business
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'checkAccess');
-	$rc = ciniki_calendars_checkAccess($ciniki, $args['business_id'], 'ciniki.calendar.search');
+	$rc = ciniki_calendars_checkAccess($ciniki, $args['business_id'], 'ciniki.calendars.search');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
