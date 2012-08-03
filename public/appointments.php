@@ -2,13 +2,17 @@
 //
 // Description
 // ===========
-// This method will return merged appointments from all the calendars 
-// which are available for the business.  Appointments from other modules
-// will be merged into one appointment list.
+// This method will return a merged list of appointments from the
+// wineproduction and atdo module.  The appointments will be for a 
+// specified day.
 //
 // Arguments
 // =========
-//
+// api_key:
+// auth_token:
+// business_id:			The ID of the business to get the appointments from.
+// date:				(optional) The date to get the appointments for.  If not specified
+//						the current date is used.
 //
 function ciniki_calendars_appointments($ciniki) {
 	//

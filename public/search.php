@@ -2,13 +2,20 @@
 //
 // Description
 // ===========
-// This method will return merged appointments from all the calendars 
-// which are available for the business.  Appointments from other modules
-// will be merged into one appointment list.
+// This method will search appointments in the wineproduction and atdo
+// modules for a business.   The results will be return as a single 
+// list of appointments.
 //
 // Arguments
 // =========
-//
+// api_key:
+// auth_token:
+// business_id:			The ID of the business the request is for.
+// start_needle:		The string to search the appointments for a match.
+// limit:				(optional) The maximum number of results to return.
+// date:				(optional) The date to start the search from.  Results will be
+//						returned closest to this date and moving outwards in either direction.
+// full:				(optional) Search closed tasks and bottled wineproduction orders.
 //
 function ciniki_calendars_search($ciniki) {
 	//
