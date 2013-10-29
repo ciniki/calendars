@@ -23,11 +23,11 @@ function ciniki_calendars_search($ciniki) {
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No business specified'), 
-		'start_needle'=>array('required'=>'yes', 'blank'=>'no', 'errmsg'=>'No search specified'), 
-		'limit'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No limit specified'), 
-		'date'=>array('required'=>'no', 'type'=>'date', 'blank'=>'yes', 'errmsg'=>'No date specified'),
-		'full'=>array('required'=>'no', 'blank'=>'yes', 'errmsg'=>'No limits specified'),
+		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+		'start_needle'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Search String'), 
+		'limit'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Limit'), 
+		'date'=>array('required'=>'no', 'type'=>'date', 'blank'=>'yes', 'name'=>'Date'),
+		'full'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Full Flag'),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
