@@ -42,7 +42,28 @@ function ciniki_calendars_search($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	$modules = $rc['modules'];
+	// Store the appointments from different modules
+	$lists = array();
+
+	//
+	// Check if any modules are currently using this subscription
+	//
+	foreach($ciniki['business']['modules'] as $module => $m) {
+		list($pkg, $mod) = explode('.', $module);
+		$rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'hooks', 'appointmentSearch');
+		if( $rc['stat'] == 'ok' ) {
+			$fn = $rc['function_call'];
+			$rc = $fn($ciniki, $args['business_id'], $args);
+			if( $rc['stat'] != 'ok' ) {
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2351', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
+			}
+			if( isset($rc['appointments']) ) {
+				array_push($lists, $rc['appointments']);
+			}
+		}
+	}
+
+/*	$modules = $rc['modules'];
 
 	
 	// Store the appointments from different modules
@@ -89,7 +110,7 @@ function ciniki_calendars_search($ciniki) {
 			array_push($lists, $rc['appointments']);
 		}
 	}
-
+*/
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'mergeAppointments');
 	return ciniki_calendars_mergeAppointments($ciniki, $lists);
 }
