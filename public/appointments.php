@@ -36,13 +36,29 @@ function ciniki_calendars_appointments($ciniki) {
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	$modules = $rc['modules'];
 
-	
 	// Store the appointments from different modules
 	$lists = array();
 
-	if( isset($modules['ciniki.atdo']) ) {
+	//
+	// Check if any modules are currently using this subscription
+	//
+	foreach($ciniki['business']['modules'] as $module => $m) {
+		list($pkg, $mod) = explode('.', $module);
+		$rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'hooks', 'appointments');
+		if( $rc['stat'] == 'ok' ) {
+			$fn = $rc['function_call'];
+			$rc = $fn($ciniki, $args['business_id'], $args);
+			if( $rc['stat'] != 'ok' ) {
+				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2350', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
+			}
+			if( isset($rc['appointments']) ) {
+				array_push($lists, $rc['appointments']);
+			}
+		}
+	}
+
+/*	if( isset($modules['ciniki.atdo']) ) {
 		//
 		// Grab the wine production appointments
 		//
@@ -50,9 +66,6 @@ function ciniki_calendars_appointments($ciniki) {
 		$rc = ciniki_atdo__appointments($ciniki, $args['business_id'], $args);
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
-		}
-		if( isset($rc['appointments']) ) {
-			array_push($lists, $rc['appointments']);
 		}
 	}
 
@@ -83,7 +96,7 @@ function ciniki_calendars_appointments($ciniki) {
 			array_push($lists, $rc['appointments']);
 		}
 	}
-
+*/
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'mergeAppointments');
 	return ciniki_calendars_mergeAppointments($ciniki, $lists);
 }
