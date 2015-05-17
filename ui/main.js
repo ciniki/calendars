@@ -1,10 +1,6 @@
 //
 function ciniki_calendars_main() {
-	//
-	// Panels
-	//
-	this.dayschedule = null;
-	this.add = null;
+	this.defaultPanel = 'dayschedule';
 
 	this.cb = null;
 	this.toggleOptions = {'off':'Off', 'on':'On'};
@@ -13,7 +9,9 @@ function ciniki_calendars_main() {
 	this.repeatOptions = {'10':'Daily', '20':'Weekly', '30':'Monthly by Date', '31':'Monthly by Weekday','40':'Yearly'};
 	this.repeatIntervals = {'1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8'};
 
-
+	//
+	// Panels
+	//
 	this.init = function() {
 		//
 		// The panel to display the Calendars, which include any business appointments
@@ -28,7 +26,7 @@ function ciniki_calendars_main() {
 		this.dayschedule.datePickerValue = function(s, d) { return this.date; }
 		this.dayschedule.sections = {
 			'datepicker':{'label':'', 'type':'datepicker', 'livesearch':'yes', 'livesearchtype':'appointments', 
-				'livesearchempty':'no', 'livesearchcols':2, 'fn':'M.ciniki_calendars_main.showSelectedDay',
+				'livesearchempty':'no', 'livesearchcols':2, 'fn':'M.ciniki_calendars_main.showSelectedDayCb',
 				'hint':'Search',
 				'headerValues':null,
 				'noData':'No appointments found',
@@ -145,7 +143,151 @@ function ciniki_calendars_main() {
 			}
 			return '';
 		};
+		this.dayschedule.addButton('mwcalendar', 'Month', 'M.ciniki_calendars_main.showMWSchedule();');
 		this.dayschedule.addClose('Back');
+
+		//
+		// The panel to display a whole month
+		//
+		this.mwschedule = new M.panel('Calendar',
+			'ciniki_calendars_main', 'mwschedule',
+			'mc', 'xlarge', 'sectioned', 'ciniki.calendars.main.mwschedule');
+		this.mwschedule.data = {};
+		this.mwschedule.appointments = null;
+		var dt = new Date();
+		if( dt.getDay() > 0 ) {
+			dt.setDate(dt.getDate() - dt.getDay());
+		}
+		this.mwschedule.start_date = new Date(dt.getTime()); //.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate();
+		dt.setDate(dt.getDate() + 41);	// Add 5 weeks
+		this.mwschedule.end_date = new Date(dt.getTime()); // dt.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate();
+		this.mwschedule.sections = {
+			'datepicker':{'label':'', 'type':'datepicker', 'livesearch':'yes', 'livesearchtype':'appointments', 
+				'livesearchempty':'no', 'livesearchcols':2, 'fn':'M.ciniki_calendars_main.showSelectedDayCb',
+				'hint':'Search',
+				'headerValues':null,
+				'noData':'No appointments found',
+				},
+			'mwschedule':{'label':'', 'type':'multiweekschedule', 'calloffset':0,
+				'start':'8:00',
+				'end':'20:00',
+				'notimelabel':'All Day',},
+			};
+		this.mwschedule.datePickerValue = function(s, d) { 
+			return this.start_date; 
+		};
+//		this.mwschedule.scheduleDate = function(s, d) {
+//			return this.date;
+//		};
+		this.mwschedule.appointmentAbbrSubject = function(ev) { 
+			var t = '';
+			if( ev.secondary_colour != null && ev.secondary_colour != '' ) {
+				t += '<span class="colourswatch" style="background-color:' + ev.secondary_colour + '">';
+				if( ev.abbr_secondary_colour_text != null && ev.abbr_secondary_colour_text != '' ) { t += ev.abbr_secondary_colour_text; }
+				else if( ev.secondary_colour_text != null && ev.secondary_colour_text != '' ) { t += ev.secondary_colour_text; }
+				else { t += '&nbsp;'; }
+				t += '</span> ';
+			}
+			t += ((ev.abbr_subject!=null&&ev.abbr_subject!='')?ev.abbr_subject:ev.subject);
+			return t;
+		};
+		this.mwschedule.appointmentAbbrSecondary = function(ev) {
+			if( ev.abbr_secondary_text != null && ev.abbr_secondary_text != '' ) {
+				return ev.abbr_secondary_text;
+			} else if( ev.secondary_text != null && ev.secondary_text != '' ) {
+				return ev.secondary_text;
+			}
+			return '';
+		};
+		this.mwschedule.appointmentEventAbbrText = function(ev) { 
+			var t = '';
+			if( ev.secondary_colour != null && ev.secondary_colour != '' ) {
+				t += '<span class="colourswatch" style="background-color:' + ev.secondary_colour + '">';
+				if( ev.abbr_secondary_colour_text != null && ev.abbr_secondary_colour_text != '' ) { t += ev.abbr_secondary_colour_text; }
+				else if( ev.secondary_colour_text != null && ev.secondary_colour_text != '' ) { t += ev.secondary_colour_text; }
+				else { t += '&nbsp;'; }
+				t += '</span> ';
+			}
+			t += ((ev.abbr_subject!=null&&ev.abbr_subject!='')?ev.abbr_subject:ev.subject);
+//			if( ev.abbr_secondary_text != null && ev.abbr_secondary_text != '' ) {
+//				t += ' <span class="secondary">' + ev.abbr_secondary_text + '</span>';
+//			} else if( ev.secondary_text != null && ev.secondary_text != '' ) {
+//				t += ' <span class="secondary">' + ev.secondary_text + '</span>';
+//			}
+			return t;
+		};
+		this.mwschedule.appointmentColour = function(ev) {
+			if( ev != null && ev.colour != null && ev.colour != '' ) {
+				return ev.colour;
+			}
+			return '#77ddff';
+		};
+		this.mwschedule.appointmentTimeFn = function(d, t, ad) {
+			return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
+		};
+		this.mwschedule.appointmentFn = function(ev) {
+			if( ev.module == 'ciniki.wineproduction' ) {
+				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+			} 
+			if( ev.module == 'ciniki.atdo' ) {
+				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + ev.id + '\'});';
+				
+			}
+			return '';
+		};
+		this.mwschedule.liveSearchCb = function(s, i, value) {
+			// Send the current selected date along, so search is based on that date
+			if( value != '' ) {
+				var date = encodeURIComponent(M.gE(this.panelUID + '_datepicker_field').innerHTML);
+				M.api.getJSONBgCb('ciniki.calendars.search', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'date':date}, 
+					function(rsp) { 
+						M.ciniki_calendars_main.mwschedule.liveSearchShow('datepicker', null, M.gE(M.ciniki_calendars_main.mwschedule.panelUID + '_' + i), rsp.appointments); 
+					});
+			}
+			return true;
+		};
+		this.mwschedule.liveSearchSubmitFn = function(s, search_str) {
+			M.ciniki_calendars_main.searchAppointments('M.ciniki_calendars_main.showDaySchedule(null, null);', search_str);
+		};
+		this.mwschedule.liveSearchResultCellColour = function(s, f, i, j, d) {
+			if( s == 'datepicker' && j == 1 ) { return this.appointmentColour(d.appointment); }
+			return '';
+		};
+		this.mwschedule.liveSearchResultClass = function(s, f, i, j, d) {
+			if( s == 'datepicker' && j == 1 ) {
+				return 'schedule_appointment';
+			}
+			return 'multiline slice_0';
+			return '';
+		};
+		this.mwschedule.liveSearchResultValue = function(s, f, i, j, d) {
+			if( j == 0 ) {
+				if( d.appointment.start_ts == 0 ) {
+					return 'unscheduled';
+				} 
+				if( d.appointment.allday == 'yes' ) {
+					return d.appointment.start_date.split(/ [0-9]+:/)[0];
+				}
+				return '<span class="maintext">' + d.appointment.start_date.split(/ [0-9]+:/)[0] + '</span><span class="subtext">' + d.appointment.start_date.split(/, [0-9][0-9][0-9][0-9] /)[1] + '</span>';
+			} else if( j == 1 ) {
+				return this.appointmentEventText(d.appointment);
+			}
+			return '';
+		}
+		this.mwschedule.liveSearchResultCellFn = function(s, f, i, j, d) {
+			if( j == 0 && d.appointment.start_ts > 0 ) {
+				return 'M.ciniki_calendars_main.showDaySchedule(null, \'' + d.appointment.date + '\');'; 
+			}
+			if( d.appointment.module == 'ciniki.wineproduction' ) {
+				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+			}
+			if( d.appointment.module == 'ciniki.atdo' ) {
+				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+			}
+			return '';
+		};
+		this.mwschedule.addButton('daycalendar', 'Day', 'M.ciniki_calendars_main.showDaySchedule();');
+		this.mwschedule.addClose('Back');
 
 		//
 		// The search panel will list all search results for a string.  This allows more advanced searching,
@@ -218,21 +360,22 @@ function ciniki_calendars_main() {
 		if( args.appointment_id != null && args.appointment_id != '' ) {
 			this.showAppointment(cb, args.appointment_id);
 		} else if( args.date != null ) {
-			this.showDaySchedule(cb, args.date);
+			this.showSelectedDay(cb, args.date);
 		} else if( args.search != null && args.search != '' ) {
 			this.searchAppointments(cb, args.search);
 		} else if( args.add != null && args.add == 'yes' ) {
 			this.showAdd(cb);
 		} else {
-			this.showDaySchedule(cb, null);
+			this.showSelectedDay(cb);
 		}
 	}
 
 	this.showDaySchedule = function(cb, scheduleDate) {
+		this.defaultPanel = 'dayschedule';
 		if( scheduleDate != null ) {
 			this.dayschedule.date = scheduleDate;
 		}
-		var rsp = M.api.getJSONCb('ciniki.calendars.appointments', 
+		M.api.getJSONCb('ciniki.calendars.appointments', 
 			{'business_id':M.curBusinessID, 'date':this.dayschedule.date}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
@@ -245,8 +388,56 @@ function ciniki_calendars_main() {
 			});
 	};
 
-	this.showSelectedDay = function(i, scheduleDate) {
-		this.showDaySchedule(null, scheduleDate);
+	this.showSelectedDayCb = function(i, scheduleDate) {
+		this.showSelectedDay(null, scheduleDate);
+	};
+	
+	this.showSelectedDay = function(cb, scheduleDate) {
+		if( this.selectedPanel == 'mwschedule' ) {
+			if( scheduleDate != null ) {
+				var dt = new Date(scheduleDate);
+				if( dt.getDay() > 0 ) {
+					dt.setDate(dt.getDate() - dt.getDay());
+				}
+				this.mwschedule.start_date = new Date(dt.getTime()); //.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate();
+				dt.setDate(dt.getDate() + 41);	// Add 5 weeks
+				this.mwschedule.end_date = new Date(dt.getTime()); // dt.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate();
+			}
+			this.showMWSchedule(cb);
+		} else {
+			this.showDaySchedule(cb, scheduleDate);
+		}
+	};
+
+	this.showMWSchedule = function(cb) {
+		this.defaultPanel = 'mwschedule';
+		M.api.getJSONCb('ciniki.calendars.appointments', 
+			{'business_id':M.curBusinessID, 
+				'start_date':this.mwschedule.start_date.getFullYear() + '-' + (this.mwschedule.start_date.getMonth()+1) + '-' + this.mwschedule.start_date.getDate(),
+				'end_date':this.mwschedule.end_date.getFullYear() + '-' + (this.mwschedule.end_date.getMonth()+1) + '-' + this.mwschedule.end_date.getDate(),
+				}, function(rsp) {
+				if( rsp.stat != 'ok' ) {
+					M.api.err(rsp);
+					return false;
+				}
+				var p = M.ciniki_calendars_main.mwschedule;
+				p.data = {'mwschedule':{}};
+				// Divide appointments into each day.
+				if( rsp.appointments != null ) {
+					var dt = null;
+					var apts = {};
+					for(var i in rsp.appointments) {
+						if( apts[rsp.appointments[i].appointment.date] == null ) {
+							apts[rsp.appointments[i].appointment.date] = {};
+						}
+						apts[rsp.appointments[i].appointment.date][i] = rsp.appointments[i];
+					}
+					p.data.mwschedule = apts;
+				}
+				p.refresh();
+				p.show(cb);
+			});
+		
 	};
 
 	this.searchAppointments = function(cb, search_str) {

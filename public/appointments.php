@@ -22,6 +22,8 @@ function ciniki_calendars_appointments($ciniki) {
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
 		'date'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Date'), 
+		'start_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetimetoutc', 'name'=>'Start Date'), 
+		'end_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetimetoutc', 'name'=>'End Date'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
@@ -58,45 +60,6 @@ function ciniki_calendars_appointments($ciniki) {
 		}
 	}
 
-/*	if( isset($modules['ciniki.atdo']) ) {
-		//
-		// Grab the wine production appointments
-		//
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'atdo', 'private', 'appointments');
-		$rc = ciniki_atdo__appointments($ciniki, $args['business_id'], $args);
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
-		}
-	}
-
-//	if( isset($modules['ciniki.tasks']) ) {
-//		//
-//		// Grab the wine production appointments
-//		//
-//		ciniki_core_loadMethod($ciniki, 'ciniki', 'tasks', 'private', 'appointments');
-//		$rc = ciniki_tasks__appointments($ciniki, $args['business_id'], $args);
-//		if( $rc['stat'] != 'ok' ) {
-//			return $rc;
-//		}
-//		if( isset($rc['appointments']) ) {
-//			array_push($lists, $rc['appointments']);
-//		}
-//	}
-	
-	if( isset($modules['ciniki.wineproduction']) ) {
-		//
-		// Grab the wine production appointments
-		//
-		ciniki_core_loadMethod($ciniki, 'ciniki', 'wineproduction', 'private', 'appointments');
-		$rc = ciniki_wineproduction__appointments($ciniki, $args['business_id'], $args);
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
-		}
-		if( isset($rc['appointments']) ) {
-			array_push($lists, $rc['appointments']);
-		}
-	}
-*/
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'mergeAppointments');
 	return ciniki_calendars_mergeAppointments($ciniki, $lists);
 }
