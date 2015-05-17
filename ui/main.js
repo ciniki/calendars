@@ -143,7 +143,7 @@ function ciniki_calendars_main() {
 			}
 			return '';
 		};
-		this.dayschedule.addButton('mwcalendar', 'Month', 'M.ciniki_calendars_main.showMWSchedule();');
+//		this.dayschedule.addButton('mwcalendar', 'Month', 'M.ciniki_calendars_main.showMWSchedule();');
 		this.dayschedule.addClose('Back');
 
 		//
