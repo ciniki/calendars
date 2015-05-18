@@ -58,11 +58,23 @@ function ciniki_calendars_search($ciniki) {
 				return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2351', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
 			}
 			if( isset($rc['appointments']) ) {
-				array_push($lists, $rc['appointments']);
+				$lists = array_merge($lists, $rc['appointments']);
 			}
 		}
 	}
 
+	//
+	// Sort appointments by start_ts
+	//
+	usort($lists, function($a, $b) {
+		if( $a['appointment']['start_ts'] == $b['appointment']['start_ts'] ) {
+			return 0;
+		}
+		return ($a['appointment']['start_ts'] < $b['appointment']['start_ts'])?-1:1;
+		});
+	return array('stat'=>'ok', 'appointments'=>$lists);
+
+/*	Code removed may 17, 2015 */
 /*	$modules = $rc['modules'];
 
 	
@@ -110,8 +122,8 @@ function ciniki_calendars_search($ciniki) {
 			array_push($lists, $rc['appointments']);
 		}
 	}
-*/
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'mergeAppointments');
 	return ciniki_calendars_mergeAppointments($ciniki, $lists);
+*/
 }
 ?>
