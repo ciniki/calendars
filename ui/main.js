@@ -3,8 +3,8 @@ function ciniki_calendars_main() {
 	if( M.size == 'compact' ) {
 		this.selectedPanel = 'dayschedule';
 	} else {
-//		this.selectedPanel = 'mwschedule';
-		this.selectedPanel = 'dayschedule';
+		this.selectedPanel = 'mwschedule';
+//		this.selectedPanel = 'dayschedule';
 	}
 	this.mwnumdays = 41;
 //	this.mwnumdays = 27;
