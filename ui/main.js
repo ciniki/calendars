@@ -4,10 +4,10 @@ function ciniki_calendars_main() {
 		this.selectedPanel = 'dayschedule';
 	} else {
 		console.log(M.userSettings);
-		if( M.userSettings['ui-calendar-view'] == 'mw' ) {
-			this.selectedPanel = 'mwschedule';
-		} else {
+		if( M.userSettings['ui-calendar-view'] == 'day' ) {
 			this.selectedPanel = 'dayschedule';
+		} else {
+			this.selectedPanel = 'mwschedule';
 		}
 	}
 	this.mwnumdays = 41;
