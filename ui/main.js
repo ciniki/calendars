@@ -3,7 +3,6 @@ function ciniki_calendars_main() {
 	if( M.size == 'compact' ) {
 		this.selectedPanel = 'dayschedule';
 	} else {
-		console.log(M.userSettings);
 		if( M.userSettings['ui-calendar-view'] == 'day' ) {
 			this.selectedPanel = 'dayschedule';
 		} else {
@@ -34,7 +33,6 @@ function ciniki_calendars_main() {
 		this.dayschedule.data = {};
 		this.dayschedule.appointments = null;
 		var dt = new Date();
-//		this.dayschedule.date = dt.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate();
 		this.dayschedule.date = dt.toISOString().substring(0,10);
 		this.dayschedule.datePickerValue = function(s, d) { return this.date; }
 		this.dayschedule.sections = {
@@ -84,7 +82,11 @@ function ciniki_calendars_main() {
 			return '#77ddff';
 		};
 		this.dayschedule.appointmentTimeFn = function(d, t, ad) {
-			return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
+			if( M.curBusiness.modules['ciniki.fatt'] != null ) {
+				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null,null);\',\'mc\',{\'add\':\'courses\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
+			} else {
+				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
+			}
 		};
 		this.dayschedule.appointmentFn = function(ev) {
 			if( ev.module == 'ciniki.wineproduction' ) {
@@ -161,8 +163,8 @@ function ciniki_calendars_main() {
 			}
 			return '';
 		};
-		this.dayschedule.addButton('mwcalendar', 'Month', 'M.ciniki_calendars_main.showMWSchedule();');
 		this.dayschedule.addClose('Back');
+		this.dayschedule.addLeftButton('mwcalendar', 'Month', 'M.ciniki_calendars_main.showMWSchedule();');
 
 		//
 		// The panel to display a whole month
@@ -234,6 +236,13 @@ function ciniki_calendars_main() {
 			}
 			return '#77ddff';
 		};
+		this.mwschedule.newFn = function(d) {
+			if( M.curBusiness.modules['ciniki.fatt'] != null ) {
+				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'courses\',\'date\':\'' + d + '\',\'time\':\'\',\'allday\':\'1\'});';
+			} else {
+				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'00:00\',\'allday\':\'1\'});';
+			}
+		};
 		this.mwschedule.appointmentTimeFn = function(d, t, ad) {
 			return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
 		};
@@ -303,8 +312,8 @@ function ciniki_calendars_main() {
 			}
 			return '';
 		};
-		this.mwschedule.addButton('daycalendar', 'Day', 'M.ciniki_calendars_main.showDaySchedule();');
 		this.mwschedule.addClose('Back');
+		this.mwschedule.addLeftButton('daycalendar', 'Day', 'M.ciniki_calendars_main.showDaySchedule();');
 
 		//
 		// The search panel will list all search results for a string.  This allows more advanced searching,
