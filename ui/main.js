@@ -9,7 +9,8 @@ function ciniki_calendars_main() {
 			this.selectedPanel = 'mwschedule';
 		}
 	}
-	this.mwnumdays = 41;
+	this.mwnumdays = 55;
+//	this.mwnumdays = 41;
 //	this.mwnumdays = 27;
 //	this.mwnumdays = 6;
 
@@ -123,16 +124,6 @@ function ciniki_calendars_main() {
 				return 'schedule_appointment';
 			}
 			return 'multiline slice_0';
-//	if( s == 'search' && (this.sections[s].dataMaps[j] == 'order_date' 
-//					|| this.sections[s].dataMaps[j] == 'start_date' 
-//					|| this.sections[s].dataMaps[j] == 'racking_date' 
-//					|| this.sections[s].dataMaps[j] == 'filtering_date' 
-//					|| this.sections[s].dataMaps[j] == 'bottling_date' 
-//					|| this.sections[s].dataMaps[j] == 'bottling_date_and_flags' 
-//				)) {
-//				return 'multiline aligncenter';
-//			}
-			return '';
 		};
 		this.dayschedule.liveSearchResultValue = function(s, f, i, j, d) {
 			if( j == 0 ) {
@@ -429,16 +420,6 @@ function ciniki_calendars_main() {
 		if( this.selectedPanel == 'mwschedule' ) {
 			if( scheduleDate != null ) {
 				this.mwschedule.date = scheduleDate;
-				var dt = new Date(scheduleDate);
-				dt.setHours(0);
-				dt.setMinutes(0);
-				dt.setSeconds(0);
-				if( dt.getDay() < 7 ) {
-					dt.setDate(dt.getDate() - dt.getDay());
-				}
-				this.mwschedule.start_date = new Date(dt.getTime());
-				dt.setDate(dt.getDate() + this.mwnumdays);	// Add 5 weeks
-				this.mwschedule.end_date = new Date(dt.getTime());
 			}
 			this.showMWSchedule(cb);
 		} else {
@@ -447,6 +428,18 @@ function ciniki_calendars_main() {
 	};
 
 	this.showMWSchedule = function(cb) {
+		// Set the start and end dates
+		var dt = new Date(this.mwschedule.date);
+		dt.setHours(0);
+		dt.setMinutes(0);
+		dt.setSeconds(0);
+		if( dt.getDay() < 7 ) {
+			dt.setDate(dt.getDate() - dt.getDay());
+		}
+		this.mwschedule.start_date = new Date(dt.getTime());
+		dt.setDate(dt.getDate() + this.mwnumdays);	// Add 5 weeks
+		this.mwschedule.end_date = new Date(dt.getTime());
+
 		this.selectedPanel = 'mwschedule';
 		M.api.getJSONCb('ciniki.calendars.appointments', 
 			{'business_id':M.curBusinessID, 
