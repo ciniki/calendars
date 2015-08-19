@@ -33,8 +33,9 @@ function ciniki_calendars_main() {
 			'mc', 'xlarge', 'sectioned', 'ciniki.calendars.main.dayschedule');
 		this.dayschedule.data = {};
 		this.dayschedule.appointments = null;
-		var dt = new Date();
-		this.dayschedule.date = dt.toISOString().substring(0,10);
+//		var dt = new Date();
+//		this.dayschedule.date = dt.toISOString().substring(0,10);
+		this.dayschedule.date = null;
 		this.dayschedule.datePickerValue = function(s, d) { return this.date; }
 		this.dayschedule.sections = {
 			'datepicker':{'label':'', 'type':'datepicker', 'livesearch':'yes', 'livesearchtype':'appointments', 
@@ -165,14 +166,7 @@ function ciniki_calendars_main() {
 			'mc', 'full', 'sectioned', 'ciniki.calendars.main.mwschedule');
 		this.mwschedule.data = {};
 		this.mwschedule.appointments = null;
-		var dt = new Date();
-		this.mwschedule.date = dt.toISOString().substring(0,10);
-		if( dt.getDay() > 0 ) {
-			dt.setDate(dt.getDate() - dt.getDay());
-		}
-		this.mwschedule.start_date = new Date(dt.getTime());
-		dt.setDate(dt.getDate() + this.mwnumdays);	// Add 5 weeks
-		this.mwschedule.end_date = new Date(dt.getTime());
+		this.mwschedule.date = null;
 		this.mwschedule.sections = {
 			'datepicker':{'label':'', 'type':'weekpicker', 'livesearch':'yes', 'livesearchtype':'appointments', 
 				'livesearchempty':'no', 'livesearchcols':2, 'fn':'M.ciniki_calendars_main.showSelectedDayCb',
@@ -393,6 +387,9 @@ function ciniki_calendars_main() {
 		this.selectedPanel = 'dayschedule';
 		if( scheduleDate != null ) {
 			this.dayschedule.date = scheduleDate;
+		} else if( this.dayschedule.date == null || (M.userSettings['ui-calendar-remember-date'] != null && M.userSettings['ui-calendar-remember-date'] != 'yes') ) {
+			var dt = new Date();
+			this.dayschedule.date = dt.toISOString().substring(0,10);
 		}
 		M.api.getJSONCb('ciniki.calendars.appointments', 
 			{'business_id':M.curBusinessID, 'date':this.dayschedule.date}, function(rsp) {
@@ -418,17 +415,22 @@ function ciniki_calendars_main() {
 	
 	this.showSelectedDay = function(cb, scheduleDate) {
 		if( this.selectedPanel == 'mwschedule' ) {
-			if( scheduleDate != null ) {
-				this.mwschedule.date = scheduleDate;
-			}
-			this.showMWSchedule(cb);
+			this.showMWSchedule(cb, scheduleDate);
 		} else {
 			this.showDaySchedule(cb, scheduleDate);
 		}
 	};
 
-	this.showMWSchedule = function(cb) {
+	this.showMWSchedule = function(cb, scheduleDate) {
 		// Set the start and end dates
+		if( scheduleDate != null ) {
+			this.mwschedule.date = scheduleDate;
+		} else if( this.mwschedule.date == null || (M.userSettings['ui-calendar-remember-date'] != null && M.userSettings['ui-calendar-remember-date'] != 'yes') ) {
+			// Reset the date to current date if not currently set, or option requires it
+			var dt = new Date();
+			this.mwschedule.date = dt.toISOString().substring(0,10);
+		}
+		// Setup the start and end date for the current schedule
 		var dt = new Date(this.mwschedule.date);
 		dt.setHours(0);
 		dt.setMinutes(0);
