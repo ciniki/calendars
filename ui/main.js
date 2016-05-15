@@ -91,15 +91,19 @@ function ciniki_calendars_main() {
 			}
 		};
 		this.dayschedule.appointmentFn = function(ev) {
-			if( ev.module == 'ciniki.wineproduction' ) {
-				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
-			} 
-			if( ev.module == 'ciniki.atdo' ) {
-				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + ev.id + '\'});';
-			}
-			if( ev.module == 'ciniki.fatt' ) {
-				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
-			}
+            if( ev.app != null ) {
+                return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+            } else {
+                if( ev.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+                } 
+                if( ev.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + ev.id + '\'});';
+                }
+                if( ev.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+                }
+            }
 			return '';
 		};
 		this.dayschedule.liveSearchCb = function(s, i, value) {
@@ -144,15 +148,19 @@ function ciniki_calendars_main() {
 			if( j == 0 && d.appointment.start_ts > 0 ) {
 				return 'M.ciniki_calendars_main.showDaySchedule(null, \'' + d.appointment.date + '\');'; 
 			}
-			if( d.appointment.module == 'ciniki.wineproduction' ) {
-				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
-			}
-			if( d.appointment.module == 'ciniki.atdo' ) {
-				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
-			}
-			if( d.appointment.module == 'ciniki.fatt' ) {
-				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
-			}
+            if( ev.app != null ) {
+                return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+            } else {
+                if( d.appointment.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                }
+                if( d.appointment.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                }
+                if( d.appointment.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                }
+            }
 			return '';
 		};
 		this.dayschedule.addClose('Back');
@@ -232,15 +240,19 @@ function ciniki_calendars_main() {
 			return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
 		};
 		this.mwschedule.appointmentFn = function(ev) {
-			if( ev.module == 'ciniki.wineproduction' ) {
-				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
-			} 
-			if( ev.module == 'ciniki.atdo' ) {
-				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + ev.id + '\'});';
-			}
-			if( ev.module == 'ciniki.fatt' ) {
-				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
-			}
+            if( ev.app != null ) {
+                return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+            } else {
+                if( ev.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+                } 
+                if( ev.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + ev.id + '\'});';
+                }
+                if( ev.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+                }
+            }
 			return '';
 		};
 		this.mwschedule.liveSearchCb = function(s, i, value) {
@@ -286,15 +298,19 @@ function ciniki_calendars_main() {
 			if( j == 0 && d.appointment.start_ts > 0 ) {
 				return 'M.ciniki_calendars_main.showMWSchedule(null, \'' + d.appointment.date + '\');'; 
 			}
-			if( d.appointment.module == 'ciniki.wineproduction' ) {
-				return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
-			}
-			if( d.appointment.module == 'ciniki.atdo' ) {
-				return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
-			}
-			if( d.appointment.module == 'ciniki.fatt' ) {
-				return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
-			}
+            if( ev.app != null ) {
+                return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
+            } else {
+                if( d.appointment.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                }
+                if( d.appointment.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                }
+                if( d.appointment.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                }
+            }
 			return '';
 		};
 		this.mwschedule.addClose('Back');
