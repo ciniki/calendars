@@ -55,7 +55,7 @@ function ciniki_calendars_search($ciniki) {
             $fn = $rc['function_call'];
             $rc = $fn($ciniki, $args['business_id'], $args);
             if( $rc['stat'] != 'ok' ) {
-                return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2351', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
+                return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.calendars.5', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
             }
             if( isset($rc['appointments']) ) {
                 $lists = array_merge($lists, $rc['appointments']);
