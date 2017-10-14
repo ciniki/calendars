@@ -28,7 +28,6 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
         'title'=>$args['page_title'],
         'breadcrumbs'=>$args['breadcrumbs'],
         'blocks'=>array(),
-        'submenu'=>array(),
         'container-class'=>'ciniki-calendars',
         );
 

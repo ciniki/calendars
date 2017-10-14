@@ -108,7 +108,6 @@ function ciniki_calendars_hooks_webOptions(&$ciniki, $business_id, $args) {
             }
         }
     }
-    error_log(print_r($options, true));
 
     $pages['ciniki.calendars'] = array('name'=>'Calendar', 'options'=>$options);
 
