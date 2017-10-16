@@ -131,6 +131,7 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
     //
     // Load the calendar items
     //
+    $legend = array();
     $items = array();
     foreach($ciniki['business']['modules'] as $module => $m) {
         list($pkg, $mod) = explode('.', $module);
@@ -143,8 +144,7 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
                 'utc_start'=>$utc_sdt,
                 'utc_end'=>$utc_edt,
                 ));
-            if( $rc['stat'] != 'ok' ) {
-            } elseif( isset($rc['items']) ) {
+            if( isset($rc['items']) ) {
                 foreach($rc['items'] as $dt => $day) {
                     if( !isset($items[$dt]) ) {
                         $items[$dt] = $day;
@@ -152,6 +152,9 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
                         $items[$dt]['items'] = array_merge($items[$dt]['items'], $day['items']);
                     }
                 }
+            }
+            if( isset($rc['legend']) && count($rc['legend']) ) {
+                $legend = array_merge($legend, $rc['legend']);
             }
         }
     }
@@ -197,16 +200,14 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
         'calendar_label' => $month_label,
         'prev_url' => $prev_url, 
         'next_url' => $next_url,
+        'legend_top' => $legend,
+        'legend_bottom' => $legend,
         'start'=>$ltz_sdt, 
         'end'=>$ltz_edt, 
         'items'=>$items,
         'display'=>(isset($settings['page-calendars-display-format']) ? $settings['page-calendars-display-format'] : 'list'),
         );
 
-//    $page['blocks'][] = array('type'=>'content', 'html'=>'<pre>' . print_r($ciniki, true) . "</pre>");
-//    $page['blocks'][] = array('type'=>'content', 'html'=>'<pre>' . print_r($items, true) . "</pre>");
-
     return array('stat'=>'ok', 'page'=>$page);
 }
 ?>
-
