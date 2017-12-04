@@ -1,4 +1,4 @@
 The Calendars module is an aggregator of other module calendar information.
 Instead of using several API calls to get all the calendar appointments from
 all modules, the Calendars module will search all relevant modules for a 
-business and return the aggregated information.
+tenant and return the aggregated information.
