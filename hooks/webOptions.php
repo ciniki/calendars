@@ -8,7 +8,7 @@
 // ---------
 // ciniki:
 // settings:        The web settings structure.
-// business_id:     The ID of the business to get foodmarket web options for.
+// tnid:     The ID of the tenant to get foodmarket web options for.
 //
 // args:            The possible arguments for posts
 //
@@ -16,12 +16,12 @@
 // Returns
 // -------
 //
-function ciniki_calendars_hooks_webOptions(&$ciniki, $business_id, $args) {
+function ciniki_calendars_hooks_webOptions(&$ciniki, $tnid, $args) {
 
     //
     // Check to make sure the module is enabled
     //
-    if( !isset($ciniki['business']['modules']['ciniki.calendars']) ) {
+    if( !isset($ciniki['tenant']['modules']['ciniki.calendars']) ) {
         return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.calendars.6', 'msg'=>"I'm sorry, the page you requested does not exist."));
     }
 
@@ -29,7 +29,7 @@ function ciniki_calendars_hooks_webOptions(&$ciniki, $business_id, $args) {
     // Get the settings from the database
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbDetailsQueryDash');
-    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_web_settings', 'business_id', $business_id, 'ciniki.web', 'settings', 'page-calendars');
+    $rc = ciniki_core_dbDetailsQueryDash($ciniki, 'ciniki_web_settings', 'tnid', $tnid, 'ciniki.web', 'settings', 'page-calendars');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -91,12 +91,12 @@ function ciniki_calendars_hooks_webOptions(&$ciniki, $business_id, $args) {
         $stripped_settings[str_replace('page-calendars-', '',$key)] = $value;
     }
 
-    foreach($ciniki['business']['modules'] as $module => $m) {
+    foreach($ciniki['tenant']['modules'] as $module => $m) {
         list($pkg, $mod) = explode('.', $module);
         $rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'hooks', 'calendarsWebOptions');
         if( $rc['stat'] == 'ok' ) {
             $fn = $rc['function_call'];
-            $rc = $fn($ciniki, $business_id, array('settings'=>$stripped_settings));
+            $rc = $fn($ciniki, $tnid, array('settings'=>$stripped_settings));
             if( $rc['stat'] != 'ok' ) {
                 return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.calendars.7', 'msg'=>'Unable to get options', 'pmsg'=>$rc['err']));
             }

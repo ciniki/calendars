@@ -26,7 +26,7 @@ function ciniki_calendars_main() {
     //
     this.init = function() {
         //
-        // The panel to display the Calendars, which include any business appointments
+        // The panel to display the Calendars, which include any tenant appointments
         //
         this.dayschedule = new M.panel('Calendar',
             'ciniki_calendars_main', 'dayschedule',
@@ -57,7 +57,7 @@ function ciniki_calendars_main() {
             return this.date;
         };
 //      this.dayschedule.appointmentDayEvents = function(i, d, day) {
-//          var rsp = M.api.getJSON('ciniki.calendars.appointments', {'business_id':M.curBusinessID, 'date':day});
+//          var rsp = M.api.getJSON('ciniki.calendars.appointments', {'tnid':M.curTenantID, 'date':day});
 //          if( rsp.stat == 'ok' ) {
 //              return rsp.appointments;
 //          }
@@ -84,7 +84,7 @@ function ciniki_calendars_main() {
             return '#77ddff';
         };
         this.dayschedule.appointmentTimeFn = function(d, t, ad) {
-            if( M.curBusiness.modules['ciniki.fatt'] != null ) {
+            if( M.curTenant.modules['ciniki.fatt'] != null ) {
                 return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null,null);\',\'mc\',{\'add\':\'courses\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
             } else {
                 return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
@@ -110,7 +110,7 @@ function ciniki_calendars_main() {
             // Send the current selected date along, so search is based on that date
             if( value != '' ) {
                 var date = encodeURIComponent(M.gE(this.panelUID + '_datepicker_field').innerHTML);
-                M.api.getJSONBgCb('ciniki.calendars.search', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'date':date}, 
+                M.api.getJSONBgCb('ciniki.calendars.search', {'tnid':M.curTenantID, 'start_needle':value, 'limit':'10', 'date':date}, 
                     function(rsp) { 
                         M.ciniki_calendars_main.dayschedule.liveSearchShow('datepicker', null, M.gE(M.ciniki_calendars_main.dayschedule.panelUID + '_' + i), rsp.appointments); 
                     });
@@ -230,7 +230,7 @@ function ciniki_calendars_main() {
             return '#77ddff';
         };
         this.mwschedule.newFn = function(d) {
-            if( M.curBusiness.modules['ciniki.fatt'] != null ) {
+            if( M.curTenant.modules['ciniki.fatt'] != null ) {
                 return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'courses\',\'date\':\'' + d + '\',\'time\':\'\',\'allday\':\'1\'});';
             } else {
                 return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'00:00\',\'allday\':\'1\'});';
@@ -259,7 +259,7 @@ function ciniki_calendars_main() {
             // Send the current selected date along, so search is based on that date
             if( value != '' ) {
                 var date = encodeURIComponent(M.gE(this.panelUID + '_datepicker_field').innerHTML);
-                M.api.getJSONBgCb('ciniki.calendars.search', {'business_id':M.curBusinessID, 'start_needle':value, 'limit':'10', 'date':date}, 
+                M.api.getJSONBgCb('ciniki.calendars.search', {'tnid':M.curTenantID, 'start_needle':value, 'limit':'10', 'date':date}, 
                     function(rsp) { 
                         M.ciniki_calendars_main.mwschedule.liveSearchShow('datepicker', null, M.gE(M.ciniki_calendars_main.mwschedule.panelUID + '_' + i), rsp.appointments); 
                     });
@@ -408,7 +408,7 @@ function ciniki_calendars_main() {
             this.dayschedule.date = dt.toISOString().substring(0,10);
         }
         M.api.getJSONCb('ciniki.calendars.appointments', 
-            {'business_id':M.curBusinessID, 'date':this.dayschedule.date}, function(rsp) {
+            {'tnid':M.curTenantID, 'date':this.dayschedule.date}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -460,7 +460,7 @@ function ciniki_calendars_main() {
 
         this.selectedPanel = 'mwschedule';
         M.api.getJSONCb('ciniki.calendars.appointments', 
-            {'business_id':M.curBusinessID, 
+            {'tnid':M.curTenantID, 
                 'start_date':this.mwschedule.start_date.getFullYear() + '-' + (this.mwschedule.start_date.getMonth()+1) + '-' + this.mwschedule.start_date.getDate(),
                 'end_date':this.mwschedule.end_date.getFullYear() + '-' + (this.mwschedule.end_date.getMonth()+1) + '-' + this.mwschedule.end_date.getDate(),
                 }, function(rsp) {
@@ -502,7 +502,7 @@ function ciniki_calendars_main() {
             this.search.last_search_str = search_str;
         }
         var rsp = M.api.getJSONCb('ciniki.calendars.search', 
-            {'business_id':M.curBusinessID, 'start_needle':search_str, 'limit':100, 'full':'yes'}, function(rsp) {
+            {'tnid':M.curTenantID, 'start_needle':search_str, 'limit':100, 'full':'yes'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;

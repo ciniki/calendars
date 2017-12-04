@@ -3,14 +3,14 @@
 // Description
 // ===========
 // This method will search appointments in the wineproduction and atdo
-// modules for a business.   The results will be return as a single 
+// modules for a tenant.   The results will be return as a single 
 // list of appointments.
 //
 // Arguments
 // =========
 // api_key:
 // auth_token:
-// business_id:         The ID of the business the request is for.
+// tnid:         The ID of the tenant the request is for.
 // start_needle:        The string to search the appointments for a match.
 // limit:               (optional) The maximum number of results to return.
 // date:                (optional) The date to start the search from.  Results will be
@@ -23,7 +23,7 @@ function ciniki_calendars_search($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'start_needle'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Search String'), 
         'limit'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Limit'), 
         'date'=>array('required'=>'no', 'type'=>'date', 'blank'=>'yes', 'name'=>'Date'),
@@ -35,10 +35,10 @@ function ciniki_calendars_search($ciniki) {
     $args = $rc['args'];
 
     //
-    // Check access to the calendar, and which modules are turned on for the business
+    // Check access to the calendar, and which modules are turned on for the tenant
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'checkAccess');
-    $rc = ciniki_calendars_checkAccess($ciniki, $args['business_id'], 'ciniki.calendars.search');
+    $rc = ciniki_calendars_checkAccess($ciniki, $args['tnid'], 'ciniki.calendars.search');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -48,12 +48,12 @@ function ciniki_calendars_search($ciniki) {
     //
     // Check if any modules are currently using this subscription
     //
-    foreach($ciniki['business']['modules'] as $module => $m) {
+    foreach($ciniki['tenant']['modules'] as $module => $m) {
         list($pkg, $mod) = explode('.', $module);
         $rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'hooks', 'appointmentSearch');
         if( $rc['stat'] == 'ok' ) {
             $fn = $rc['function_call'];
-            $rc = $fn($ciniki, $args['business_id'], $args);
+            $rc = $fn($ciniki, $args['tnid'], $args);
             if( $rc['stat'] != 'ok' ) {
                 return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.calendars.5', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
             }
@@ -86,7 +86,7 @@ function ciniki_calendars_search($ciniki) {
         // Grab the wine production appointments
         //
         ciniki_core_loadMethod($ciniki, 'ciniki', 'atdo', 'private', 'appointmentSearch');
-        $rc = ciniki_atdo__appointmentSearch($ciniki, $args['business_id'], $args);
+        $rc = ciniki_atdo__appointmentSearch($ciniki, $args['tnid'], $args);
         if( $rc['stat'] != 'ok' ) {
             return $rc;
         }
@@ -100,7 +100,7 @@ function ciniki_calendars_search($ciniki) {
 //      // Grab the wine production appointments
 //      //
 //      ciniki_core_loadMethod($ciniki, 'ciniki', 'tasks', 'private', 'appointmentSearch');
-//      $rc = ciniki_tasks__appointmentSearch($ciniki, $args['business_id'], $args);
+//      $rc = ciniki_tasks__appointmentSearch($ciniki, $args['tnid'], $args);
 //      if( $rc['stat'] != 'ok' ) {
 //          return $rc;
 //      }
@@ -114,7 +114,7 @@ function ciniki_calendars_search($ciniki) {
         // Grab the wine production appointments
         //
         ciniki_core_loadMethod($ciniki, 'ciniki', 'wineproduction', 'private', 'appointmentSearch');
-        $rc = ciniki_wineproduction__appointmentSearch($ciniki, $args['business_id'], $args);
+        $rc = ciniki_wineproduction__appointmentSearch($ciniki, $args['tnid'], $args);
         if( $rc['stat'] != 'ok' ) {
             return $rc;
         }

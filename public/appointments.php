@@ -10,7 +10,7 @@
 // =========
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the appointments from.
+// tnid:         The ID of the tenant to get the appointments from.
 // date:                (optional) The date to get the appointments for.  If not specified
 //                      the current date is used.
 //
@@ -20,7 +20,7 @@ function ciniki_calendars_appointments($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'date'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Date'), 
         'start_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetimetoutc', 'name'=>'Start Date'), 
         'end_date'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'datetimetoutc', 'name'=>'End Date'), 
@@ -31,10 +31,10 @@ function ciniki_calendars_appointments($ciniki) {
     $args = $rc['args'];
 
     //
-    // Check access to the calendar, and which modules are turned on for the business
+    // Check access to the calendar, and which modules are turned on for the tenant
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'calendars', 'private', 'checkAccess');
-    $rc = ciniki_calendars_checkAccess($ciniki, $args['business_id'], 'ciniki.calendars.appointments');
+    $rc = ciniki_calendars_checkAccess($ciniki, $args['tnid'], 'ciniki.calendars.appointments');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -45,12 +45,12 @@ function ciniki_calendars_appointments($ciniki) {
     //
     // Check if any modules are currently using this subscription
     //
-    foreach($ciniki['business']['modules'] as $module => $m) {
+    foreach($ciniki['tenant']['modules'] as $module => $m) {
         list($pkg, $mod) = explode('.', $module);
         $rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'hooks', 'appointments');
         if( $rc['stat'] == 'ok' ) {
             $fn = $rc['function_call'];
-            $rc = $fn($ciniki, $args['business_id'], $args);
+            $rc = $fn($ciniki, $args['tnid'], $args);
             if( $rc['stat'] != 'ok' ) {
                 return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.calendars.4', 'msg'=>'Error checking for appointments.', 'err'=>$rc['err']));
             }

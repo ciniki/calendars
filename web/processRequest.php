@@ -8,7 +8,7 @@
 // ---------
 // ciniki:
 // settings:        The web settings structure.
-// business_id:     The ID of the business to get calendar for.
+// tnid:     The ID of the tenant to get calendar for.
 //
 // args:            The possible arguments for posts
 //
@@ -16,12 +16,12 @@
 // Returns
 // -------
 //
-function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, $args) {
+function ciniki_calendars_web_processRequest(&$ciniki, $settings, $tnid, $args) {
 
     //
     // Check to make sure the module is enabled
     //
-    if( !isset($ciniki['business']['modules']['ciniki.calendars']) ) {
+    if( !isset($ciniki['tenant']['modules']['ciniki.calendars']) ) {
         return array('stat'=>'404', 'err'=>array('code'=>'ciniki.calendars.8', 'msg'=>"I'm sorry, the page you requested does not exist."));
     }
     $page = array(
@@ -41,10 +41,10 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
     $ciniki['response']['head']['og']['url'] = $args['domain_base_url'];
 
     //
-    // Load business settings
+    // Load tenant settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $business_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $tnid);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -100,7 +100,7 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
     }
 
     //
-    // Setup the date and time for business timezone
+    // Setup the date and time for tenant timezone
     //
     $ltz_sdt->setDate($year, $month, 1);
     $ltz_sdt->setTime(0, 0, 0);
@@ -133,12 +133,12 @@ function ciniki_calendars_web_processRequest(&$ciniki, $settings, $business_id, 
     //
     $legend = array();
     $items = array();
-    foreach($ciniki['business']['modules'] as $module => $m) {
+    foreach($ciniki['tenant']['modules'] as $module => $m) {
         list($pkg, $mod) = explode('.', $module);
         $rc = ciniki_core_loadMethod($ciniki, $pkg, $mod, 'web', 'calendarsWebItems');
         if( $rc['stat'] == 'ok' ) {
             $fn = $rc['function_call'];
-            $rc = $fn($ciniki, $stripped_settings, $business_id, array(
+            $rc = $fn($ciniki, $stripped_settings, $tnid, array(
                 'ltz_start'=>$ltz_sdt,
                 'ltz_end'=>$ltz_edt,
                 'utc_start'=>$utc_sdt,
