@@ -379,7 +379,7 @@ function ciniki_calendars_main() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_calendars_main', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         } 
 
