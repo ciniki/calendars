@@ -121,7 +121,7 @@ function ciniki_calendars_main() {
             M.ciniki_calendars_main.searchAppointments('M.ciniki_calendars_main.showDaySchedule(null, null);', search_str);
         };
         this.dayschedule.liveSearchResultCellColour = function(s, f, i, j, d) {
-            if( s == 'datepicker' && j == 1 ) { return this.appointmentColour(d.appointment); }
+            if( s == 'datepicker' && j == 1 ) { return this.appointmentColour(d); }
             return '';
         };
         this.dayschedule.liveSearchResultClass = function(s, f, i, j, d) {
@@ -132,33 +132,33 @@ function ciniki_calendars_main() {
         };
         this.dayschedule.liveSearchResultValue = function(s, f, i, j, d) {
             if( j == 0 ) {
-                if( d.appointment.start_ts == 0 ) {
+                if( d.start_ts == 0 ) {
                     return 'unscheduled';
                 } 
-                if( d.appointment.allday == 'yes' ) {
-                    return d.appointment.start_date.split(/ [0-9]+:/)[0];
+                if( d.allday == 'yes' ) {
+                    return d.start_date.split(/ [0-9]+:/)[0];
                 }
-                return '<span class="maintext">' + d.appointment.start_date.split(/ [0-9]+:/)[0] + '</span><span class="subtext">' + d.appointment.start_date.split(/, [0-9][0-9][0-9][0-9] /)[1] + '</span>';
+                return '<span class="maintext">' + d.start_date.split(/ [0-9]+:/)[0] + '</span><span class="subtext">' + d.start_date.split(/, [0-9][0-9][0-9][0-9] /)[1] + '</span>';
             } else if( j == 1 ) {
-                return this.appointmentEventText(d.appointment);
+                return this.appointmentEventText(d);
             }
             return '';
         }
         this.dayschedule.liveSearchResultCellFn = function(s, f, i, j, d) {
-            if( j == 0 && d.appointment.start_ts > 0 ) {
-                return 'M.ciniki_calendars_main.showDaySchedule(null, \'' + d.appointment.date + '\');'; 
+            if( j == 0 && d.start_ts > 0 ) {
+                return 'M.ciniki_calendars_main.showDaySchedule(null, \'' + d.date + '\');'; 
             }
-            if( d.appointment.app != null ) {
-                return 'M.startApp(\'' + d.appointment.app + '\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+            if( d.app != null ) {
+                return 'M.startApp(\'' + d.app + '\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
             } else {
-                if( d.appointment.module == 'ciniki.wineproduction' ) {
-                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.atdo' ) {
-                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.fatt' ) {
-                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
             }
             return '';
@@ -240,6 +240,7 @@ function ciniki_calendars_main() {
             return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
         };
         this.mwschedule.appointmentFn = function(ev) {
+            console.log(ev);
             if( ev.app != null ) {
                 return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
             } else {
@@ -270,7 +271,7 @@ function ciniki_calendars_main() {
             M.ciniki_calendars_main.searchAppointments('M.ciniki_calendars_main.showMWSchedule(null, null);', search_str);
         };
         this.mwschedule.liveSearchResultCellColour = function(s, f, i, j, d) {
-            if( s == 'datepicker' && j == 1 ) { return this.appointmentColour(d.appointment); }
+            if( s == 'datepicker' && j == 1 ) { return this.appointmentColour(d); }
             return '';
         };
         this.mwschedule.liveSearchResultClass = function(s, f, i, j, d) {
@@ -282,33 +283,33 @@ function ciniki_calendars_main() {
         };
         this.mwschedule.liveSearchResultValue = function(s, f, i, j, d) {
             if( j == 0 ) {
-                if( d.appointment.start_ts == 0 ) {
+                if( d.start_ts == 0 ) {
                     return 'unscheduled';
                 } 
-                if( d.appointment.allday == 'yes' ) {
-                    return d.appointment.start_date.split(/ [0-9]+:/)[0];
+                if( d.allday == 'yes' ) {
+                    return d.start_date.split(/ [0-9]+:/)[0];
                 }
-                return '<span class="maintext">' + d.appointment.start_date.split(/ [0-9]+:/)[0] + '</span><span class="subtext">' + d.appointment.start_date.split(/, [0-9][0-9][0-9][0-9] /)[1] + '</span>';
+                return '<span class="maintext">' + d.start_date.split(/ [0-9]+:/)[0] + '</span><span class="subtext">' + d.start_date.split(/, [0-9][0-9][0-9][0-9] /)[1] + '</span>';
             } else if( j == 1 ) {
-                return this.appointmentEventText(d.appointment);
+                return this.appointmentEventText(d);
             }
             return '';
         }
         this.mwschedule.liveSearchResultCellFn = function(s, f, i, j, d) {
-            if( j == 0 && d.appointment.start_ts > 0 ) {
-                return 'M.ciniki_calendars_main.showMWSchedule(null, \'' + d.appointment.date + '\');'; 
+            if( j == 0 && d.start_ts > 0 ) {
+                return 'M.ciniki_calendars_main.showMWSchedule(null, \'' + d.date + '\');'; 
             }
-            if( d.appointment.app != null ) {
-                return 'M.startApp(\'' + d.appointment.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+            if( d.app != null ) {
+                return 'M.startApp(\'' + d.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
             } else {
-                if( d.appointment.module == 'ciniki.wineproduction' ) {
-                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.atdo' ) {
-                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.fatt' ) {
-                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
             }
             return '';
@@ -341,19 +342,19 @@ function ciniki_calendars_main() {
         };
         this.search.appointmentColour = this.dayschedule.appointmentColour;
         this.search.cellColour = function(s, i, j, d) {
-            if( s == 'results' && j == 1 ) { return this.appointmentColour(d.appointment); }
+            if( s == 'results' && j == 1 ) { return this.appointmentColour(d); }
             return '';
         };
         this.search.cellFn = function(s, i, j, d) {
             if( s == 'results' && j == 1 ) {
-                if( d.appointment.module == 'ciniki.wineproduction' ) {
-                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.searchAppointments(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.wineproduction' ) {
+                    return 'M.startApp(\'ciniki.wineproduction.main\',null,\'M.ciniki_calendars_main.searchAppointments(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.atdo' ) {
-                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.atdo' ) {
+                    return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'atdo_id\':\'' + d.id + '\'});';
                 }
-                if( d.appointment.module == 'ciniki.fatt' ) {
-                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.appointment.id + '\'});';
+                if( d.module == 'ciniki.fatt' ) {
+                    return 'M.startApp(\'ciniki.fatt.offerings\',null,\'M.ciniki_calendars_main.showDaySchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + d.id + '\'});';
                 }
             }
             return '';
@@ -475,10 +476,10 @@ function ciniki_calendars_main() {
                     var dt = null;
                     var apts = {};
                     for(var i in rsp.appointments) {
-                        if( apts[rsp.appointments[i].appointment.date] == null ) {
-                            apts[rsp.appointments[i].appointment.date] = {};
+                        if( apts[rsp.appointments[i].date] == null ) {
+                            apts[rsp.appointments[i].date] = {};
                         }
-                        apts[rsp.appointments[i].appointment.date][i] = rsp.appointments[i];
+                        apts[rsp.appointments[i].date][i] = rsp.appointments[i];
                     }
                     p.data.mwschedule = apts;
                 }

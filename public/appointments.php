@@ -64,11 +64,12 @@ function ciniki_calendars_appointments($ciniki) {
     // Sort appointments by start_ts
     //
     usort($lists, function($a, $b) {
-        if( $a['appointment']['start_ts'] == $b['appointment']['start_ts'] ) {
+        if( $a['start_ts'] == $b['start_ts'] ) {
             return 0;
         }
-        return ($a['appointment']['start_ts'] < $b['appointment']['start_ts'])?-1:1;
+        return ($a['start_ts'] < $b['start_ts'])?-1:1;
         });
+
     return array('stat'=>'ok', 'appointments'=>$lists);
 
 
