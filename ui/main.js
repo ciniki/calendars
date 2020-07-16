@@ -197,14 +197,14 @@ function ciniki_calendars_main() {
                 t += '<span class="colourswatch" style="background-color:' + ev.secondary_colour + '">';
                 if( ev.abbr_secondary_colour_text != null && ev.abbr_secondary_colour_text != '' ) { t += ev.abbr_secondary_colour_text; }
                 else if( ev.secondary_colour_text != null && ev.secondary_colour_text != '' ) { t += ev.secondary_colour_text; }
-                else { t += '&nbsp;'; }
+                else { t = '<span class="colourswatch" style="background-color:' + ev.secondary_colour + '; color: ' + ev.secondary_colour + '">m'; }
                 t += '</span> ';
             }
             t += ((ev.abbr_subject!=null&&ev.abbr_subject!='')?ev.abbr_subject:ev.subject);
             return t;
         };
         this.mwschedule.appointmentAbbrSecondary = function(ev) {
-            if( ev.abbr_secondary_text != null ) {
+            if( ev.abbr_secondary_text != null && ev.abbr_secondary_text != '' ) {
                 return ev.abbr_secondary_text;
             } else if( ev.secondary_text != null && ev.secondary_text != '' ) {
                 return ev.secondary_text;
@@ -240,7 +240,6 @@ function ciniki_calendars_main() {
             return 'M.startApp(\'ciniki.atdo.main\',null,\'M.ciniki_calendars_main.showMWSchedule(null,null);\',\'mc\',{\'add\':\'appointment\',\'date\':\'' + d + '\',\'time\':\'' + t + '\',\'allday\':\'' + ad + '\'});';
         };
         this.mwschedule.appointmentFn = function(ev) {
-            console.log(ev);
             if( ev.app != null ) {
                 return 'M.startApp(\'' + ev.app + '\',null,\'M.ciniki_calendars_main.showMWSchedule(null, null);\',\'mc\',{\'appointment_id\':\'' + ev.id + '\'});';
             } else {
