@@ -50,7 +50,7 @@ function ciniki_calendars_hooks_uiSettings($ciniki, $tnid, $args) {
                     ),
                 'cellValues'=>array(
                     '0'=>'if( d.start_ts == 0 ) {'
-                            . '"unschedule";'
+                            . '"unscheduled";'
                         . '} else if( d.appointment_allday == "yes" ) {'
                             . 'd.start_date.split(/ [0-]+:/)[0];'
                         . '} else {'
